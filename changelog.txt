@@ -1,0 +1,23 @@
+Changelog version 0.2
+
+updated so chat commands can be used in any channel
+!apply can only be used in #apply
+!invite now produces an invite
+
+upcoming changes:
+!ip - server IP's
+bot running status
+
+Changelog version 0.2.1
+
+updated so chat commands can be used in any channel
+!apply can only be used in #apply
+!invite now produces an invite
+!ip - server IP's
+bot appears online not idle
+.clear commmand now clears the command aswell as the messages.
+
+upcoming changes:
+Voice channel
+
+
