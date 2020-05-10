@@ -3,8 +3,15 @@ from discord.ext import commands
 import asyncio
 import time
 import discord.client
+import smtplib
 
 client = commands.Bot(command_prefix=".")
+email_address = ## email out here
+email_password = #pw here
+emails = ###emails here
+emails2 = ###emails here
+subject = "Triangle Gaming Announcement"
+subject2 = "New application"
 
 def words():
     with open("badwords.txt", "r") as f:
@@ -18,7 +25,7 @@ badwords = words()
 @client.event
 async def on_ready():
     game = "Watching you"
-    await client.change_presence(status=discord.Status.idle, activity=discord.Game("With Marks Teamspeak permissions"))
+    await client.change_presence(status=discord.Status.online, activity=discord.Game("With Marks Teamspeak permissions"))
     print('hello')
     print(f'{badwords}')
 
@@ -85,11 +92,14 @@ async def on_member_update(before, after):
 async def on_message(message, yes=None):
     # chat commands
     id = client.get_guild(705455096749752323)
-    channels = ["general"]
+    channels = ["announcements-🚨"]
     apply = ["i-want-to-apply"]
     global messages
     messages = + 1
     await client.process_commands(message)
+    if message.content.find("!endgame") != -1:
+        await message.channel.purge(limit=100)
+        await message.channel.send("if you can't act like grown ups then we start again")
     if message.content.find(".hello") != -1:
         await message.channel.send(f"""What's cooking {message.author.mention} looking good today :wink:""")
     elif message.content == "!users":
@@ -106,12 +116,36 @@ async def on_message(message, yes=None):
         await message.channel.send(
             "https://tenor.com/view/sr-burns-pero-aqui-todos-somos-amigos-chico-todos-somos-amigos-amigos-castro-gif-14927106")
     elif message.content == "!ip":
-        await message.channel.send("testing")
+        await message.channel.send("194.147.122.228:10054")
     if message.content.find("!invite") != -1:
         await message.channel.send(f"here you go mate https://discord.gg/GSjyC5z {message.author.mention}")
+    if message.content.find("josh") != -1:
+        await message.channel.send("https://tenor.com/view/yas-queen-b99-gif-9873002")
+    if str(message.channel) in channels:
+        if message.content.find("@everyone") != -1:
+            await message.channel.send("booting email.....")
+            message = f"Hello Triangle Gaming Member,\n\n a new annoucemnet has been posted\n\n{message.content}\n\n Thanks\nTriangle Gaming Bot"
+            msg = "Subject: {}\n\n{}".format(subject,message)
+            with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
+                smtp.ehlo()
+                smtp.starttls()
+                smtp.login(email_address, email_password)
+                smtp.ehlo()
+                smtp.sendmail(email_address, emails, msg)
+                smtp.quit()
     if str(message.channel) in apply:
         if message.content.find("!apply") != -1:
-            await message.channel.send(f"""Hi {message.author.mention}, please read the rules. once done please message a @CoC member""")
+            await message.channel.send(
+                f"""Hi {message.author.mention}, please read the rules. An email has been sent to our recruitment team who will contact you through discord in the coming days!""")
+            message = f"Hey Triangle recruitment,\n\n New application from {message.author}.\n\n Please contact through discord\n\n Kind regards\n Triangle Bot."
+            apply = "Subject: {}\n\n{}".format(subject2,message)
+            with smtplib.SMTP("smtp.gmail.com", 587) as smtp:
+                smtp.ehlo()
+                smtp.starttls()
+                smtp.login(email_address, email_password)
+                smtp.ehlo()
+                smtp.sendmail(email_address, emails2, apply)
+                smtp.quit()
 
 
 @client.event
@@ -130,7 +164,7 @@ async def create_invite(ctx):
 @client.command()
 @commands.has_permissions(manage_messages=True)
 async def clear(ctx, amount=5):
-    await ctx.channel.purge(limit=amount)
+    await ctx.channel.purge(limit=amount + 1)
 
 
 @client.command()
@@ -148,4 +182,4 @@ async def addword(ctx, reason=None):
         except Exception as b:
             print(b)
 
-client.run('TOKEN')
+client.run(token goes here)
